@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Zone</title>
+    <style>
+        marquee{
+            color: #ff5e00;
+            background-color: #ffdfaa;
+        }
+        h2{
+            color: #0057ff;
+        }
+        h3{
+            color: #55ffd5;
+        }
+        a{
+            text-decoration: none;
+            color: black;
+        }
+        button{
+            background-color: #ff946a;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <marquee>
+        <h1>Welcome To Game Zone!</h1>
+    </marquee>
+    <h2>Games</h2>
+    <div>
+        <h3>Match The Pairs</h3>
+        <img src="" alt="Image of the game."><br>
+        <button>
+            <a href="Match The Pairs.html">Click Here to Play</a>
+        </button>
+    </div>
+</body>
+</html>
