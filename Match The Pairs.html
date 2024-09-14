@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match the Pairs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 400px;
+            width: 100%;
+        }
+        .card {
+            aspect-ratio: 1 / 1;
+            background-color: #3498db;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+            background-color: #fff;
+        }
+        .card-content {
+            display: none;
+        }
+        .card.flipped .card-content {
+            display: block;
+            transform: rotateY(180deg);
+        }
+        button {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <h1>Match the Pairs</h1>
+    <div id="game-board" role="grid" aria-label="Match the Pairs game board"></div>
+    <button id="shuffle-btn" aria-label="Shuffle and restart game">Shuffle and Restart</button>
+
+    <script>
+        const CARDS = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
+        let cards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        const gameBoard = document.getElementById('game-board');
+        const shuffleBtn = document.getElementById('shuffle-btn');
+
+        function shuffleCards() {
+            cards = [...CARDS, ...CARDS].sort(() => Math.random() - 0.5);
+            matchedPairs = 0;
+            renderBoard();
+        }
+
+        function renderBoard() {
+            gameBoard.innerHTML = '';
+            cards.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card';
+                cardElement.setAttribute('role', 'gridcell');
+                cardElement.setAttribute('aria-label', 'Card ' + (index + 1));
+                cardElement.innerHTML = `
+                    <span class="card-content">${card}</span>
+                `;
+                cardElement.addEventListener('click', () => flipCard(cardElement, index));
+                gameBoard.appendChild(cardElement);
+            });
+        }
+
+        function flipCard(cardElement, index) {
+            if (flippedCards.length === 2 || cardElement.classList.contains('flipped')) return;
+
+            cardElement.classList.add('flipped');
+            flippedCards.push({ element: cardElement, index: index });
+
+            if (flippedCards.length === 2) {
+                setTimeout(checkMatch, 500);
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            const isMatch = cards[card1.index] === cards[card2.index];
+
+            if (isMatch) {
+                card1.element.removeEventListener('click', flipCard);
+                card2.element.removeEventListener('click', flipCard);
+                matchedPairs++;
+
+                if (matchedPairs === CARDS.length) {
+                    setTimeout(() => alert('Congratulations! You won!'), 500);
+                }
+            } else {
+                card1.element.classList.remove('flipped');
+                card2.element.classList.remove('flipped');
+            }
+
+            flippedCards = [];
+        }
+
+        shuffleBtn.addEventListener('click', shuffleCards);
+
+        // Initial shuffle
+        shuffleCards();
+    </script>
+</body>
+</html>
